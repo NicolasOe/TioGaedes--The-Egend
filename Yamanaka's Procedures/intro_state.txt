@@ -1,0 +1,105 @@
+intro_state PROC
+.data
+t_letter_dim WORD 0B07h
+t_letter BYTE " _________ |  _   _  ||_/ | | \_|    | |       _| |_     |_____|             "
+
+i_letter_dim WORD 0507h
+i_letter BYTE "  _   (_)  __  [  |  | | [___]     "
+
+o_letter_dim WORD 0807h
+o_letter BYTE "                  .--.  / .'`\ \| \__. | '.__.'         "
+
+g_letter_dim WORD 0B07h
+g_letter BYTE "   ______   .' ___  | / .'   \_| | |   ____ \ `.___]  | `._____.'            "
+
+a_letter_dim WORD 0707h
+a_letter BYTE "               ,--.  `'_\ : // | |,\'-;__/       "
+
+e_letter_dim WORD 0707h
+e_letter BYTE "               .---. / /__\\| \__., '.__.'       "
+
+d_letter_dim WORD 0A07h
+d_letter BYTE "       __       |  ]  .--.| | / /'`\' | | \__/  |  '.__.;__]          "
+
+s_letter_dim WORD 0707h
+s_letter BYTE "               .--.  ( (`\]  `'.'. [\__) )       "
+
+h_letter_dim WORD 0907h
+h_letter BYTE " __      [  |      | |--.   | .-. |  | | | | [___]|__]         "
+
+ue_letter_dim WORD 0A07h
+ue_letter BYTE " ________ |_   __  |  | |_ \_|  |  _| _  _| |__/ ||________|          "
+
+lg_letter_dim WORD 0807h
+lg_letter BYTE "                  .--./) / /'`\; \ \._// .',__` ( ( __))"
+
+n_letter_dim WORD 0907h
+n_letter BYTE "                   _ .--.  [ `.-. |  | | | | [___||__]         "
+
+tiogaedes_dim WORD 0606h
+tiogaedes BYTE " / X\  \ V/, /|J\3O ||   //\\ //  ||"
+
+.code
+INVOKE draw_matrix, OFFSET t_letter, t_letter_dim, 0202h, 09h
+mov eax, 300
+call Delay
+INVOKE draw_matrix, OFFSET i_letter, i_letter_dim, 020Dh, 09h
+mov eax, 290
+call Delay
+INVOKE draw_matrix, OFFSET o_letter, o_letter_dim, 0213h, 09h
+mov eax, 280
+call Delay
+INVOKE draw_matrix, OFFSET g_letter, g_letter_dim, 021Bh, 09h
+mov eax, 270
+call Delay
+INVOKE draw_matrix, OFFSET a_letter, a_letter_dim, 0226h, 09h
+mov eax, 260
+call Delay
+INVOKE draw_matrix, OFFSET e_letter, e_letter_dim, 022Dh, 09h
+mov eax, 250
+call Delay
+INVOKE draw_matrix, OFFSET d_letter, d_letter_dim, 0234h, 09h
+mov eax, 240
+call Delay
+INVOKE draw_matrix, OFFSET e_letter, e_letter_dim, 023Eh, 09h
+mov eax, 230
+call Delay
+INVOKE draw_matrix, OFFSET s_letter, s_letter_dim, 0245h, 09h
+mov eax, 220
+call Delay
+
+INVOKE draw_matrix, OFFSET t_letter, t_letter_dim, 0C02h, 02h
+mov eax, 210
+call Delay
+INVOKE draw_matrix, OFFSET h_letter, h_letter_dim, 0B0Dh, 02h
+mov eax, 200
+call Delay
+INVOKE draw_matrix, OFFSET e_letter, e_letter_dim, 0A16h, 02h
+mov eax, 190
+call Delay
+INVOKE draw_matrix, OFFSET ue_letter, ue_letter_dim, 0920h, 02h
+mov eax, 180
+call Delay
+INVOKE draw_matrix, OFFSET lg_letter, lg_letter_dim, 092Ah, 02h
+mov eax, 170
+call Delay
+INVOKE draw_matrix, OFFSET e_letter, e_letter_dim, 0A32h, 02h
+mov eax, 160
+call Delay
+INVOKE draw_matrix, OFFSET n_letter, n_letter_dim, 0B39h, 02h
+mov eax, 150
+call Delay
+INVOKE draw_matrix, OFFSET d_letter, d_letter_dim, 0C42h, 02h
+mov eax, 500
+call Delay
+INVOKE draw_matrix, OFFSET tiogaedes, tiogaedes_dim, 1221h, YELLOW
+mov eax, 3000
+call Delay
+
+mWrite <"Deus é brasileiro">
+
+mov eax, 0
+mov estadoAtual, al
+call Clrscr
+ret
+intro_state ENDP

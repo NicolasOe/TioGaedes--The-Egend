@@ -1,0 +1,19 @@
+;Procedure estético de slow write
+;Lucas Carvalhaes
+SlowWrite PROC uses esi eax ebx,
+	text:DWORD, cdelay:BYTE
+	mov eax, 0
+	mov esi, text
+	SlowWrite_Check:
+	mov bl, [esi]
+	cmp bl, 0
+	je SlowWrite_Complete
+		mov al, bl
+		call WriteChar
+		mov al, cdelay
+		call Delay
+		inc esi
+		jmp SlowWrite_Check
+	SlowWrite_Complete:
+	ret
+SlowWrite ENDP

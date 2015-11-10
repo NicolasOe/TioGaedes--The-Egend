@@ -1,0 +1,10 @@
+Vazio = 0
+Parede = 1
+Vazio EGEND = 2
+
+Peça Mãe = 5
+Peça unitária = 6
+Peça deitada = 7
+Peça em pé = 8
+
+//mudanca de ids para fins de deixar o programa mais coxa

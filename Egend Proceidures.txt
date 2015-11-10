@@ -1,0 +1,437 @@
+;------------------------------------------------------
+LoadMap PROC
+;
+; Loads the map with EGEND
+; Receives: EDX points to the filename.
+; Returns: MapInfo receives the map's EGENDS!
+;------------------------------------------------------
+
+
+;abre a fase referenta à fase atual
+mov al,faseAtual
+add edx,6
+mov [edx],al
+sub edx,6
+
+
+call OpenInputFile
+push edx
+mov edx, OFFSET MapInfo
+mov ecx, 64
+call ReadFromFile
+
+mov esi, 0
+
+LoadMapLoop1:
+
+cmp MapInfo[esi], 1
+je PecaMenor
+cmp MapInfo[esi], 6
+je PecaMenor
+
+cmp MapInfo[esi], 7
+je PecaDeitada
+
+cmp MapInfo[esi], 8
+je PecaEmPe
+
+cmp MapInfo[esi], 5
+je PecaMae
+
+cmp MapInfo[esi], 2
+je VazioEGEND
+
+jmp LoadMapVerifyExit
+
+LoadMapLoop:
+jmp LoadMapLoop1
+
+PecaMenor:
+mov MapCovered[esi], 1
+jmp LoadMapVerifyExit
+
+PecaDeitada:
+mov MapCovered[esi], 1
+mov MapCovered[esi+1], 1
+jmp LoadMapVerifyExit
+
+PecaEmPe:
+mov MapCovered[esi], 1
+mov MapCovered[esi+8], 1
+jmp LoadMapVerifyExit
+
+PecaMae:
+mov MapCovered[esi], 1
+mov MapCovered[esi+1], 1
+mov MapCovered[esi+8], 1
+mov MapCovered[esi+9], 1
+
+VazioEGEND:
+mov MapCovered[esi], 2
+mov MapCovered[esi+1], 2
+mov MapCovered[esi+8], 2
+mov MapCovered[esi+9], 2
+
+LoadMapVerifyExit:
+
+add esi, 1
+
+loop LoadMapLoop
+
+ret
+
+LoadMap ENDP
+
+
+
+
+
+
+
+
+
+;------------------------------------------------------
+VerifyCollision PROC
+;
+; Verifies the EGENDNESS of the collision
+; Receives: EAX receives the position. EBX receives the moviment
+;
+; 	    UP, DOWN, LEFT, RIGHT
+; 	    0 ,  1  ,  2  ,   3
+;
+; Returns: If NO COLLISION EDX = 0, if COLLISION EDX = 1 
+;------------------------------------------------------
+
+push ecx
+
+cmp MapInfo[esi], 2
+je PecaMenor
+
+cmp MapInfo[esi], 3
+je PecaDeitada
+
+cmp MapInfo[esi], 4
+je PecaEmPe
+
+cmp MapInfo[esi], 5
+je PecaMae
+
+PecaMenor:
+
+cmp ebx, 0
+je PecaMenorUp
+
+cmp ebx, 1
+je PecaMenorDown
+
+cmp ebx, 2
+je PecaMenorLeft
+
+cmp ebx, 3
+je PecaMenorRight
+
+PecaMenorUp:
+mov ecx, eax
+sub ecx, 8
+cmp MapCovered[ecx], 1
+je Collision
+jmp NoCollision
+
+PecaMenorDown:
+mov ecx, eax
+add ecx, 8
+cmp MapCovered[ecx], 1 
+je Collision
+jmp NoCollision
+
+PecaMenorLeft:
+mov ecx, eax
+sub ecx, 1
+cmp MapCovered[ecx], 1
+je Collision
+jmp NoCollision
+
+PecaMenorRight:
+mov ecx, eax
+add ecx, 1
+cmp MapCovered[ecx], 1
+je Collision
+jmp NoCollision
+
+
+PecaDeitada:
+
+cmp ebx, 0
+je PecaDeitadaUp
+
+cmp ebx, 1
+je PecaDeitadaDown
+
+cmp ebx, 2
+je PecaDeitadaLeft
+
+cmp ebx, 3
+je PecaDeitadaRight
+
+PecaDeitadaUp:
+mov ecx, eax
+sub ecx, 8
+cmp MapCovered[ecx], 1
+je Collision
+add ecx, 1
+cmp MapCovered[ecx], 1
+jmp NoCollision
+
+PecaDeitadaDown:
+mov ecx, eax
+add ecx, 8
+cmp MapCovered[ecx], 1 
+je Collision
+add ecx, 1
+cmp MapCovered[ecx], 1 
+je Collision
+jmp NoCollision
+
+PecaDeitadaLeft:
+mov ecx, eax
+sub ecx, 1
+cmp MapCovered[ecx], 1
+je Collision
+jmp NoCollision
+
+PecaDeitadaRight:
+mov ecx, eax
+add ecx, 2
+cmp MapCovered[ecx], 1
+je Collision
+jmp NoCollision
+
+PecaEmPe:
+
+cmp ebx, 0
+je PecaEmPeUp
+
+cmp ebx, 1
+je PecaEmPeDown
+
+cmp ebx, 2
+je PecaEmPeLeft
+
+cmp ebx, 3
+je PecaEmPeRight
+
+PecaEmPeUp:
+mov ecx, eax
+sub ecx, 8
+cmp MapCovered[ecx], 1
+je Collision
+jmp NoCollision
+
+PecaEmPeDown:
+mov ecx, eax
+add ecx, 16
+cmp MapCovered[ecx], 1 
+je Collision
+jmp NoCollision
+
+PecaEmPeLeft:
+mov ecx, eax
+sub ecx, 1
+cmp MapCovered[ecx], 1
+je Collision
+add ecx, 8
+cmp MapCovered[ecx], 1 
+je Collision
+jmp NoCollision
+
+PecaEmPeRight:
+mov ecx, eax
+add ecx, 1
+cmp MapCovered[ecx], 1
+je Collision
+add ecx, 8
+cmp MapCovered[ecx], 1 
+je Collision
+jmp NoCollision
+
+PecaMae:
+
+cmp ebx, 0
+je PecaMaeUp
+
+cmp ebx, 1
+je PecaMaeDown
+
+cmp ebx, 2
+je PecaMaeLeft
+
+cmp ebx, 3
+je PecaMaeRight
+
+PecaMaeUp:
+mov ecx, eax
+sub ecx, 8
+cmp MapCovered[ecx], 1
+je Collision
+add ecx, 1
+cmp MapCovered[ecx], 1
+jmp NoCollision
+
+PecaMaeDown:
+mov ecx, eax
+add ecx, 16
+cmp MapCovered[ecx], 1 
+je Collision
+add ecx, 1
+cmp MapCovered[ecx], 1 
+je Collision
+jmp NoCollision
+
+PecaMaeLeft:
+mov ecx, eax
+sub ecx, 1
+cmp MapCovered[ecx], 1
+je Collision
+add ecx, 8
+cmp MapCovered[ecx], 1 
+je Collision
+jmp NoCollision
+
+PecaMaeRight:
+mov ecx, eax
+add ecx, 2
+cmp MapCovered[ecx], 1
+je Collision
+add ecx, 8
+cmp MapCovered[ecx], 1 
+je Collision
+jmp NoCollision
+
+Collision:
+mov edx, 1
+jmp EndVerify
+
+NoCollision:
+mov edx, 0
+
+EndVerify:
+pop ecx
+
+VerifyCollision ENDP
+
+;------------------------------------------------------
+VerifyEGENDNESS PROC
+;
+; Verify if the player GOT THE EGENDEEEEEEEEEEEEEEEEESS
+; Receives:AL receives the position of the mother
+; Returns: EDX rerturns the EGENDNESS of the player
+; 	   If is Egend, return 1, else return 0
+; AUTOR: NICOLAS OE
+;------------------------------------------------------
+
+mov edx, 1
+cmp MapCovered[al], 2
+je EGENDNESS
+mov edx, 0
+EGENDESS:
+
+VerifyEGENDNESS ENDP
+
+
+;------------------------------------------------------
+MovePiece PROC USES ecx edx
+;
+; Updates the game (Map info and Map Covered)
+; Receives:AL receives the position of the selected piece
+;	   EBX receives the movement of the piece
+;
+; 	   UP, DOWN, LEFT, RIGHT
+; 	   0 ,  1  ,  2  ,   3
+;
+; Returns: Only courage to the player
+; AUTOR: NICOLAS OE
+;------------------------------------------------------
+
+mov ecx, MapInfo[al]
+mov edx, al
+mov MapInfo[al], 0
+mov MapCovered[al], 0
+
+cmp ebx, 0
+je Up
+
+cmp ebx, 1
+je Down
+
+cmp ebx, 2
+je Left
+
+cmp ebx, 3
+je Right
+
+Up:
+sub edx, 8
+jmp Move
+
+Down:
+add edx, 8
+jmp Move
+
+Left:
+sub edx, 1
+jmp Move
+
+Right:
+add edx, 1
+jmp Move
+
+Move:
+mov MapInfo[edx], ecx
+
+cmp MapInfo[edx], 2
+je PecaMenor
+
+cmp MapInfo[edx], 3
+je PecaDeitada
+
+cmp MapInfo[edx], 4
+je PecaEmPe
+
+cmp MapInfo[edx], 5
+je PecaMae
+
+jmp Exit
+
+PecaMenor:
+mov MapCovered[edx], 1
+jmp Exit
+
+PecaDeitada:
+mov MapCovered[edx], 1
+mov MapCovered[edx+1], 1
+jmp Exit
+
+PecaEmPe:
+mov MapCovered[edx], 1
+mov MapCovered[edx+8], 1
+jmp Exit
+
+PecaMae:
+cmp MapCovered[edx], 2
+je Covered1
+mov MapCovered[edx], 1
+jmp Exit
+Covered1:
+cmp MapCovered[edx+1],2
+je Covered2
+mov MapCovered[edx+1], 1
+Covered2:
+cmp MapCovered[edx+8],2
+je Covered3
+mov MapCovered[edx+8], 1
+Covered3:
+cmp MapCovered[edx+9],2
+je Exit
+mov MapCovered[edx+9], 1
+Exit:
+MovePiece ENDP

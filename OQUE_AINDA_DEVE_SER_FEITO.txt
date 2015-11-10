@@ -1,0 +1,4 @@
+-Arrumar o sistema de save e ordenação (final do código)
+-Troca de estado para vitoria
+-Reload das fases seguintes 
+-Level design + dicas design

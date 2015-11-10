@@ -1,0 +1,7 @@
+Procedures:
+
+01 - draw_matrix
+02 - menu_state
+03 - read_entry
+04 - controles_state
+05 - sexy_state
